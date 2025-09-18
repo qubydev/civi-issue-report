@@ -17,13 +17,16 @@ export default function App() {
     status: 'all'
   });
 
+
+  // map settings 
   const defaultProps = {
     center: {
       lat: 22.5726,
       lng: 88.3639
     },
-    zoom: 11
+    zoom: 16
   };
+
 
   const filteredIssues = issues.filter(issue => {
     return (selectedFilters.category === 'all' || issue.type === selectedFilters.category) &&
@@ -52,28 +55,27 @@ export default function App() {
 
   return (
     <>
-      <div className='fixed top-0 left-0 w-full bg-background shadow-md flex items-center h-16 px-4'>
-        <h1 className="text-2xl font-bold text-gray-900 mr-auto">Admin Portal</h1>
-        <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="icon">
-            <Bell className="size-6" />
+      <div className='fixed top-0 left-0 w-full bg-background shadow-md flex items-center h-16 px-4 z-50'>
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mr-auto">Admin Portal</h1>
+        <div className="flex items-center space-x-2 sm:space-x-4">
+          <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-10 sm:w-10">
+            <Bell className="size-4 sm:size-6" />
           </Button>
-          <Button variant="ghost" size="icon">
-            <Settings className="size-6" />
+          <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-10 sm:w-10">
+            <Settings className="size-4 sm:size-6" />
           </Button>
         </div>
       </div>
-      <main className='h-screen pt-[calc(var(--spacing)*16)] flex'>
-        <div className='border-r h-full w-full p-4 flex flex-col'>
+      <main className='min-h-screen pt-16 flex flex-col lg:flex-row'>
+        <div className='border-r-0 lg:border-r h-auto lg:h-full w-full lg:w-1/2 p-4 flex flex-col'>
 
           {/* Map view  */}
-          <div className="h-80 bg-gray-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300 mb-4">
+          <div className="h-64 sm:h-80 bg-gray-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300 mb-4">
             <GoogleMapReact
               bootstrapURLKeys={{ key: "" }}
               defaultCenter={defaultProps.center}
               defaultZoom={defaultProps.zoom}
             >
-              {/* render red dots  */}
               {filteredIssues.map(issue => (
                 <div
                   key={issue.id}
@@ -93,7 +95,7 @@ export default function App() {
               <CardTitle className="text-lg">Filters</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-4">
                 {/* Issue Category */}
                 <div className="flex-1">
                   <label className="text-sm font-medium mb-2 block">Issue Category</label>
@@ -148,21 +150,21 @@ export default function App() {
         </div>
 
         {/* Right side box with table */}
-        <div className='h-full w-full p-4'>
-          <Card className="h-full">
+        <div className='h-auto lg:h-full w-full lg:w-1/2 p-4'>
+          <Card className="h-auto lg:h-full">
             <CardHeader>
               <CardTitle>Issues</CardTitle>
               <CardDescription>Recently reported issues</CardDescription>
             </CardHeader>
-            <CardContent className={"overflow-y-scroll"}>
-              <div className="h-full">
-                <table className="w-full">
+            <CardContent className={"overflow-hidden"}>
+              <div className="h-auto lg:h-full overflow-x-auto">
+                <table className="w-full min-w-[600px]">
                   <thead>
                     <tr className="border-b text-left">
-                      <th className="pb-2 font-medium text-sm">Type</th>
-                      <th className="pb-2 font-medium text-sm">Location</th>
-                      <th className="pb-2 font-medium text-sm">Priority</th>
-                      <th className="pb-2 font-medium text-sm">Status</th>
+                      <th className="pb-2 font-medium text-sm px-2">Type</th>
+                      <th className="pb-2 font-medium text-sm px-2">Location</th>
+                      <th className="pb-2 font-medium text-sm px-2">Priority</th>
+                      <th className="pb-2 font-medium text-sm px-2">Status</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -172,19 +174,21 @@ export default function App() {
                         className="border-b hover:bg-gray-50 cursor-pointer"
                         onClick={() => handleRowClick(issue.id)}
                       >
-                        <td className="py-3 text-sm capitalize">{ISSUE_TYPES[issue.type] || issue.type}</td>
-                        <td className="py-3 text-sm">
-                          {issue.geotag.placeName.length > 20
-                            ? issue.geotag.placeName.slice(0, 40) + '...'
-                            : issue.geotag.placeName}
+                        <td className="py-3 text-sm capitalize px-2">{ISSUE_TYPES[issue.type] || issue.type}</td>
+                        <td className="py-3 text-sm px-2">
+                          <span className="block max-w-[200px] truncate" title={issue.geotag.placeName}>
+                            {issue.geotag.placeName.length > 30
+                              ? issue.geotag.placeName.slice(0, 30) + '...'
+                              : issue.geotag.placeName}
+                          </span>
                         </td>
-                        <td className="py-3">
-                          <Badge variant="outline" className={`capitalize ${getPriorityColor(issue.priority).color}`}>
+                        <td className="py-3 px-2">
+                          <Badge variant="outline" className={`capitalize text-xs ${getPriorityColor(issue.priority).color}`}>
                             {PRIORITY_LEVELS[issue.priority] || 'N/A'}
                           </Badge>
                         </td>
-                        <td className="py-3">
-                          <Badge variant="outline" className={`capitalize ${getStatusColor(issue.status).color}`}>
+                        <td className="py-3 px-2">
+                          <Badge variant="outline" className={`capitalize text-xs ${getStatusColor(issue.status).color}`}>
                             {STATUS_TYPES[issue.status] || 'N/A'}
                           </Badge>
                         </td>

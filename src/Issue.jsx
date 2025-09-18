@@ -65,8 +65,8 @@ export default function Issue() {
               ← Back
             </Button>
           </div>
-          <div className='flex items-center gap-3 mb-4'>
-            <h1 className='text-3xl font-bold text-gray-900'>Issue #{issue.id}</h1>
+          <div className='flex flex-col gap-3 mb-4'>
+            <h1 className='text-sm font-bold text-muted-foreground'>Issue #{issue.id}</h1>
             <div className='flex gap-2'>
               {issue?.priority && (
                 <span className={`border py-1 px-3 rounded-full font-bold uppercase text-sm ${getPriorityColor(issue.priority).str}`}>
@@ -80,8 +80,9 @@ export default function Issue() {
               )}
             </div>
           </div>
-          <h2 className='text-xl text-gray-700 mb-2'>{ISSUE_TYPES[issue.type] || 'Uncategorized'}</h2>
-          <p className='text-gray-600'>{issue.geotag.placeName} • {getFormatedDateTime(issue.datetime)}</p>
+          
+          <h2 className='text-xl text-gray-700 mb-2 font-semibold'>{ISSUE_TYPES[issue.type] || 'Uncategorized'}</h2>
+          <p>{issue.geotag.placeName} • {getFormatedDateTime(issue.datetime)}</p>
         </div>
 
         {/* Progress Tracker */}
