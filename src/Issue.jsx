@@ -53,7 +53,7 @@ export default function Issue() {
 
   return (
     <div className='min-h-screen bg-gray-50 py-8'>
-      <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8'>
+      <div className='max-w-5xl mx-auto px-4 sm:px-6 lg:px-8'>
         {/* Header Section */}
         <div className='mb-8'>
           <div className='flex items-center justify-between mb-6'>
@@ -106,10 +106,10 @@ export default function Issue() {
                   <CardTitle>Media</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {issue.image && (
+                  {issue.images?.length > 0 && (
                     <div>
                       <img
-                        src={issue.image}
+                        src={issue.images[0]}
                         alt={`Issue ${issue.id}`}
                         className="w-full h-64 sm:h-80 object-cover rounded-lg border"
                       />

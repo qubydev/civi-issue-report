@@ -2,13 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { MapPin, Settings, Bell } from 'lucide-react'
 import { ISSUE_TYPES, PRIORITY_LEVELS, STATUS_TYPES, getPriorityColor, getStatusColor } from '@/lib/helpers';
 import { useNavigate } from 'react-router-dom'
-import { mockIssues } from '@/lib/helpers'
-
+import GoogleMapReact from 'google-map-react';
 
 export default function App() {
   const navigate = useNavigate();
@@ -18,6 +16,14 @@ export default function App() {
     priority: 'all',
     status: 'all'
   });
+
+  const defaultProps = {
+    center: {
+      lat: 22.5726,
+      lng: 88.3639
+    },
+    zoom: 11
+  };
 
   const filteredIssues = issues.filter(issue => {
     return (selectedFilters.category === 'all' || issue.type === selectedFilters.category) &&
@@ -62,11 +68,23 @@ export default function App() {
 
           {/* Map view  */}
           <div className="h-80 bg-gray-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300 mb-4">
-            <div className="text-center">
-              <MapPin className="mx-auto h-12 w-12 text-gray-400 mb-2" />
-              <p className="text-gray-500">Interactive Map View</p>
-              <p className="text-sm text-gray-400">Issues plotted by location</p>
-            </div>
+            <GoogleMapReact
+              bootstrapURLKeys={{ key: "" }}
+              defaultCenter={defaultProps.center}
+              defaultZoom={defaultProps.zoom}
+            >
+              {/* render red dots  */}
+              {filteredIssues.map(issue => (
+                <div
+                  key={issue.id}
+                  lat={issue.geotag.lat}
+                  lng={issue.geotag.lng}
+                  className={`size-4 rounded-full ${issue.priority === 'high' ? 'bg-red-500' : issue.priority === 'medium' ? 'bg-yellow-500' : 'bg-green-500'}`}
+                  title={issue.geotag.placeName}
+                >
+                </div>
+              ))}
+            </GoogleMapReact>
           </div>
 
           {/* Filters in a row */}
