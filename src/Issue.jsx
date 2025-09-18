@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { mockIssues, ISSUE_TYPES, PRIORITY_LEVELS, STATUS_TYPES, getPriorityColor, getStatusColor } from '@/lib/helpers'
 import { Card, CardHeader, CardTitle, CardContent } from './components/ui/card'
 import { Button } from './components/ui/button'
+import ProgressTracker from './components/ui/progress-tracker'
 
 const getFormatedDateTime = (datetime) => {
   const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
@@ -67,74 +68,7 @@ export default function Issue() {
               <CardTitle>Progress Status</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className='flex items-center justify-between relative'>
-                {/* Progress Line */}
-                <div className='absolute top-1/2 left-0 right-0 h-0.5 bg-gray-200 -translate-y-1/2 z-0'></div>
-                <div
-                  className='absolute top-1/2 left-0 h-0.5 bg-blue-500 -translate-y-1/2 z-0 transition-all duration-300'
-                  style={{
-                    width: issue.status === 'pending' ? '0%' :
-                      issue.status === 'assigned' ? '33.33%' :
-                        issue.status === 'processing' ? '66.66%' : '100%'
-                  }}
-                ></div>
-
-                {/* Step 1: Pending */}
-                <div className='flex flex-col items-center z-10'>
-                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center mb-2 transition-colors ${['pending', 'assigned', 'processing', 'resolved'].includes(issue.status)
-                      ? 'bg-blue-500 border-blue-500 text-white'
-                      : 'bg-white border-gray-300 text-gray-400'
-                    }`}>
-                    {['pending', 'assigned', 'processing', 'resolved'].includes(issue.status) ? '✓' : '1'}
-                  </div>
-                  <span className={`text-xs font-medium ${issue.status === 'pending' ? 'text-blue-600' : 'text-gray-600'
-                    }`}>
-                    Pending
-                  </span>
-                </div>
-
-                {/* Step 2: Assigned */}
-                <div className='flex flex-col items-center z-10'>
-                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center mb-2 transition-colors ${['assigned', 'processing', 'resolved'].includes(issue.status)
-                      ? 'bg-blue-500 border-blue-500 text-white'
-                      : 'bg-white border-gray-300 text-gray-400'
-                    }`}>
-                    {['assigned', 'processing', 'resolved'].includes(issue.status) ? '✓' : '2'}
-                  </div>
-                  <span className={`text-xs font-medium ${issue.status === 'assigned' ? 'text-blue-600' : 'text-gray-600'
-                    }`}>
-                    Assigned
-                  </span>
-                </div>
-
-                {/* Step 3: In Progress */}
-                <div className='flex flex-col items-center z-10'>
-                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center mb-2 transition-colors ${['processing', 'resolved'].includes(issue.status)
-                      ? 'bg-blue-500 border-blue-500 text-white'
-                      : 'bg-white border-gray-300 text-gray-400'
-                    }`}>
-                    {['processing', 'resolved'].includes(issue.status) ? '✓' : '3'}
-                  </div>
-                  <span className={`text-xs font-medium ${issue.status === 'processing' ? 'text-blue-600' : 'text-gray-600'
-                    }`}>
-                    In Progress
-                  </span>
-                </div>
-
-                {/* Step 4: Resolved */}
-                <div className='flex flex-col items-center z-10'>
-                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center mb-2 transition-colors ${issue.status === 'resolved'
-                      ? 'bg-green-500 border-green-500 text-white'
-                      : 'bg-white border-gray-300 text-gray-400'
-                    }`}>
-                    {issue.status === 'resolved' ? '✓' : '4'}
-                  </div>
-                  <span className={`text-xs font-medium ${issue.status === 'resolved' ? 'text-green-600' : 'text-gray-600'
-                    }`}>
-                    Resolved
-                  </span>
-                </div>
-              </div>
+              <ProgressTracker currentStatus={issue.status} />
             </CardContent>
           </Card>
         </div>
