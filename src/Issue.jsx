@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { mockIssues, ISSUE_TYPES, PRIORITY_LEVELS, STATUS_TYPES, getPriorityColor, getStatusColor } from '@/lib/helpers'
 import { Card, CardHeader, CardTitle, CardContent } from './components/ui/card'
 import { Button } from './components/ui/button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/ui/select'
 import ProgressTracker from './components/ui/progress-tracker'
 
 const getFormatedDateTime = (datetime) => {
@@ -101,19 +102,10 @@ export default function Issue() {
                       </audio>
                     </div>
                   )}
+                  <p className="text-gray-700 leading-relaxed">{issue.description}</p>
                 </CardContent>
               </Card>
             )}
-
-            {/* Description Section */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Description</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700 leading-relaxed">{issue.description}</p>
-              </CardContent>
-            </Card>
           </div>
 
           {/* Sidebar */}
@@ -180,47 +172,42 @@ export default function Issue() {
                 <CardTitle>Actions</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className='space-y-3'>
-                  <p className='text-sm text-gray-600 mb-4'>Update issue status:</p>
-                  <div className='grid grid-cols-1 gap-2'>
-                    {issue.status !== 'pending' && (
-                      <Button
-                        variant="outline"
-                        onClick={() => updateStatus('pending')}
-                        className="w-full justify-start"
-                      >
-                        Mark as Pending
-                      </Button>
-                    )}
-                    {issue.status !== 'assigned' && issue.status !== 'pending' && (
-                      <Button
-                        variant="outline"
-                        onClick={() => updateStatus('assigned')}
-                        className="w-full justify-start"
-                      >
-                        Mark as Assigned
-                      </Button>
-                    )}
-                    {issue.status !== 'processing' && ['assigned', 'resolved'].includes(issue.status) && (
-                      <Button
-                        variant="outline"
-                        onClick={() => updateStatus('processing')}
-                        className="w-full justify-start"
-                      >
-                        Mark as In Progress
-                      </Button>
-                    )}
-                    {issue.status !== 'resolved' && (
-                      <Button
-                        onClick={() => updateStatus('resolved')}
-                        className="w-full justify-start bg-green-600 hover:bg-green-700"
-                      >
-                        Mark as Resolved
-                      </Button>
-                    )}
-                  </div>
+                <div className='space-y-4'>
+                  <p className='text-sm text-gray-600 mb-3'>Update issue status:</p>
 
-                  {/* Status History */}
+                  <Select onValueChange={(value) => updateStatus(value)} value={issue.status}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pending">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          <span>Mark as Pending</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="assigned">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                          <span>Mark as Assigned</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="processing">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                          <span>Mark as In Progress</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="resolved">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          <span>Mark as Resolved</span>
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  {/* Current Status Display */}
                   <div className='mt-6 pt-4 border-t border-gray-200'>
                     <h4 className='text-sm font-medium text-gray-700 mb-2'>Current Status</h4>
                     <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(issue.status).str}`}>
