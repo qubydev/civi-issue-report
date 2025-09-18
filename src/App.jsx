@@ -67,7 +67,7 @@ export default function App() {
         </div>
       </div>
       <main className='min-h-screen pt-16 flex flex-col lg:flex-row'>
-        <div className='border-r-0 lg:border-r h-auto lg:h-full w-full lg:w-1/2 p-4 flex flex-col'>
+        <div className='h-auto lg:h-full w-full lg:w-1/2 px-4 lg:py-4 mt-4 lg:mt-0 flex flex-col'>
 
           {/* Map view  */}
           <div className="h-64 sm:h-80 bg-gray-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300 mb-4">
@@ -90,12 +90,12 @@ export default function App() {
           </div>
 
           {/* Filters in a row */}
-          <Card className="mb-4">
+          <Card className="mb-4 gap-2">
             <CardHeader>
               <CardTitle className="text-lg">Filters</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-2">
                 {/* Issue Category */}
                 <div className="flex-1">
                   <label className="text-sm font-medium mb-2 block">Issue Category</label>
@@ -150,7 +150,7 @@ export default function App() {
         </div>
 
         {/* Right side box with table */}
-        <div className='h-auto lg:h-full w-full lg:w-1/2 p-4'>
+        <div className='h-auto lg:h-full w-full lg:w-1/2 px-4 lg:py-4'>
           <Card className="h-auto lg:h-full">
             <CardHeader>
               <CardTitle>Issues</CardTitle>
