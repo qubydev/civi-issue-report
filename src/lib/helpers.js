@@ -20,7 +20,7 @@ export const STATUS_TYPES = {
 };
 
 export const getPriorityColor = (priority) => {
-    switch (priority.toLowerCase()) {
+    switch (priority?.toLowerCase()) {
         case 'high':
             return {
                 color: 'text-red-500',
@@ -79,9 +79,13 @@ export const mockIssues = [
         id: '101',
         description: 'There is a large pothole on Main Street causing traffic disruptions.',
         type: 'pothole',
-        image: 'https://imgs.search.brave.com/B2qDUV1HAvkiISwYT4c_4sCuITkegLxkPrkjSqgBB7M/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvODEz/OTQ0Mzk4L3Bob3Rv/L211bWJhaS1pbmRp/YS10aGUtbmV3bHkt/aW5hdWd1cmF0ZWQt/c2lvbi1kYWRhci1m/bHlvdmVyLWhhcy1k/ZXZlbG9wZWQtdW5l/dmVuLXN0cmV0Y2hl/cy1hbmQuanBnP3M9/NjEyeDYxMiZ3PTAm/az0yMCZjPV9UVHFh/LW9FSmFNVkZqd0dU/cXFDVmdQR1NsaUpz/MVdtQjFBUXAyb3Bt/Mmc9',
+        images: ['/road.webp'],
         audio: '/audio.mp3',
-        location: 'Main Street',
+        geotag: {
+            lat: 22.5726,
+            lng: 88.3639,
+            placeName: 'Chatterjee Lane, Kolkata'
+        },
         datetime: '2024-10-01T10:30:00Z',
         priority: 'medium',
         status: 'processing',
@@ -90,17 +94,5 @@ export const mockIssues = [
             name: 'City Maintenance Team',
             area: 'Downtown'
         }
-    },
-    {
-        id: '102',
-        description: 'There is a large water leak on Main Street causing disruptions.',
-        type: 'water_leak',
-        image: 'https://imgs.search.brave.com/B2qDUV1HAvkiISwYT4c_4sCuITkegLxkPrkjSqgBB7M/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvODEz/OTQ0Mzk4L3Bob3Rv/L211bWJhaS1pbmRp/YS10aGUtbmV3bHkt/aW5hdWd1cmF0ZWQt/c2lvbi1kYWRhci1m/bHlvdmVyLWhhcy1k/ZXZlbG9wZWQtdW5l/dmVuLXN0cmV0Y2hl/cy1hbmQuanBnP3M9/NjEyeDYxMiZ3PTAm/az0yMCZjPV9UVHFh/LW9FSmFNVkZqd0dU/cXFDVmdQR1NsaUpz/MVdtQjFBUXAyb3Bt/Mmc9',
-        audio: '/audio.mp3',
-        location: 'Main Street',
-        datetime: '2024-10-01T10:30:00Z',
-        priority: 'high',
-        status: 'pending',
-        assignedTo: null
     },
 ];

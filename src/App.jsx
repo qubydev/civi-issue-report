@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -12,13 +12,14 @@ import { mockIssues } from '@/lib/helpers'
 
 export default function App() {
   const navigate = useNavigate();
+  const [issues, setIssues] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState({
     category: 'all',
     priority: 'all',
     status: 'all'
   });
 
-  const filteredIssues = mockIssues.filter(issue => {
+  const filteredIssues = issues.filter(issue => {
     return (selectedFilters.category === 'all' || issue.type === selectedFilters.category) &&
       (selectedFilters.priority === 'all' || issue.priority === selectedFilters.priority) &&
       (selectedFilters.status === 'all' || issue.status === selectedFilters.status);
@@ -27,6 +28,21 @@ export default function App() {
   const handleRowClick = (issueId) => {
     navigate(`/issue/${issueId}`);
   }
+
+  const fetchIssues = async () => {
+    try {
+      const response = await fetch('https://sih-backend-sepia.vercel.app/api/v1/issues');
+      const data = await response.json();
+      setIssues(data.issues || []);
+    } catch (error) {
+      console.error("Error fetching issues:", error);
+      alert("Failed to fetch issues. Please try again later.");
+    }
+  }
+
+  useEffect(() => {
+    fetchIssues();
+  }, []);
 
   return (
     <>
@@ -125,7 +141,6 @@ export default function App() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b text-left">
-                      <th className="pb-2 font-medium text-sm">Issue #</th>
                       <th className="pb-2 font-medium text-sm">Type</th>
                       <th className="pb-2 font-medium text-sm">Location</th>
                       <th className="pb-2 font-medium text-sm">Priority</th>
@@ -139,9 +154,12 @@ export default function App() {
                         className="border-b hover:bg-gray-50 cursor-pointer"
                         onClick={() => handleRowClick(issue.id)}
                       >
-                        <td className="py-3 text-sm">{issue.id}</td>
                         <td className="py-3 text-sm capitalize">{ISSUE_TYPES[issue.type] || issue.type}</td>
-                        <td className="py-3 text-sm">{issue.location}</td>
+                        <td className="py-3 text-sm">
+                          {issue.geotag.placeName.length > 20
+                            ? issue.geotag.placeName.slice(0, 40) + '...'
+                            : issue.geotag.placeName}
+                        </td>
                         <td className="py-3">
                           <Badge variant="outline" className={`capitalize ${getPriorityColor(issue.priority).color}`}>
                             {PRIORITY_LEVELS[issue.priority] || 'N/A'}

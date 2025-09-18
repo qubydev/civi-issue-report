@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { mockIssues, ISSUE_TYPES, PRIORITY_LEVELS, STATUS_TYPES, getPriorityColor, getStatusColor } from '@/lib/helpers'
 import { Card, CardHeader, CardTitle, CardContent } from './components/ui/card'
@@ -14,11 +14,33 @@ const getFormatedDateTime = (datetime) => {
 export default function Issue() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [issue, setIssue] = useState(mockIssues.find(issue => issue.id === id));
+  const [loading, setLoading] = useState(true);
+  const [issue, setIssue] = useState(null);
 
   const updateStatus = (newStatus) => {
     setIssue(prev => ({ ...prev, status: newStatus }));
   };
+
+  const fetchIssue = async (issueId) => {
+    setLoading(true);
+    const response = await fetch(`https://sih-backend-sepia.vercel.app/api/v1/issues/${issueId}`);
+    const data = await response.json();
+    setIssue(data || null);
+    setLoading(false);
+  }
+  useEffect(() => {
+    if (id) {
+      fetchIssue(id);
+    }
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className='text-muted-foreground'>Loading...</p>
+      </div>
+    );
+  }
 
   if (!issue) {
     return (
@@ -59,7 +81,7 @@ export default function Issue() {
             </div>
           </div>
           <h2 className='text-xl text-gray-700 mb-2'>{ISSUE_TYPES[issue.type] || 'Uncategorized'}</h2>
-          <p className='text-gray-600'>{issue.location} • {getFormatedDateTime(issue.datetime)}</p>
+          <p className='text-gray-600'>{issue.geotag.placeName} • {getFormatedDateTime(issue.datetime)}</p>
         </div>
 
         {/* Progress Tracker */}
@@ -119,7 +141,11 @@ export default function Issue() {
                 <div className='space-y-3'>
                   <div className='flex justify-between items-center py-2 border-b border-gray-100'>
                     <span className='text-gray-600 font-medium'>Location:</span>
-                    <p className='text-gray-900 font-semibold text-right'>{issue.location}</p>
+                    <p className='text-gray-900 font-semibold text-right'>{issue.geotag.placeName}</p>
+                  </div>
+                  <div className='flex justify-between items-center py-2 border-b border-gray-100'>
+                    <span className='text-gray-600 font-medium'>Cordinates:</span>
+                    <p className='text-gray-900 font-semibold text-right'>{`${issue.geotag.lat}, ${issue.geotag.lng}`}</p>
                   </div>
                   <div className='flex justify-between items-center py-2 border-b border-gray-100'>
                     <span className='text-gray-600 font-medium'>Date & Time:</span>
